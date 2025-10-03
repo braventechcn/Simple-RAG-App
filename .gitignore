@@ -8,4 +8,5 @@ env/*
 simple_rag_env
 simple_rag_env/*
 
-
+# Ignore git setup record
+git_setup_record.md
