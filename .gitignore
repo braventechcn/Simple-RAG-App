@@ -1,0 +1,9 @@
+# Ignore model files for bge-base-zh-v1.5
+bge-base-zh-v1.5
+bge-base-zh-v1.5/*
+
+# Ignore Model Environment for simple_rag_env
+env
+env/*
+simple_rag_env
+simple_rag_env/*
