@@ -3,6 +3,8 @@ bge-base-zh-v1.5
 bge-base-zh-v1.5/*
 
 # Ignore Model Environment for simple_rag_env
+venv
+venv/*
 env
 env/*
 simple_rag_env

@@ -11,7 +11,10 @@ from http import HTTPStatus #检查与Qwen模型HTTP请求状态
 import os # 引入操作系统库，后续配置环境变量与获得当前文件路径使用
 import logging # 日志库
 
-dashscope.base_http_api_url = 'https://dashscope.aliyuncs.com/api/v1'
+# # API Key与地域强绑定，请确保base_url与API Key的地域一致
+# 若使用新加坡地域的模型，请释放下列注释；若使用中国大陆地域的模型，则保持注释状态
+# dashscope.base_http_api_url = "https://dashscope-intl.aliyuncs.com/api/v1"
+
 
 # 不使用分词并行化操作, 避免多线程或多进程环境中运行多个模型引发冲突或死锁
 os.environ["TOKENIZERS_PARALLELISM"] = "false" 
@@ -25,6 +28,7 @@ logging.basicConfig(
 def load_embedding_model():
     """
     Load the embedding model 'bge-base-zh-v1.5' from a local path.
+    If not found, download from HuggingFace Hub and cache to the specified path.
     Returns: Returns the loaded embedding model.
     """
     logging.info("Loading Embedding Model 'bge-base-zh-v1.5'...")
@@ -32,7 +36,16 @@ def load_embedding_model():
     #   文本映射为固定维度的向量表示（即 embeddings），使得语义相近的句子在向量空间中更接近。
     # SentenceTransformer 读取绝对路径下的 bge-base-zh-v1.5 模型，非下载
     # os.path.abspath() 会根据当前工作目录，把这个相对路径变成完整的绝对路径
-    embedding_model = SentenceTransformer(os.path.abspath('bge-base-zh-v1.5'))
+    local_model_path = os.path.abspath('bge-base-zh-v1.5')
+    if os.path.exists(local_model_path):
+        embedding_model = SentenceTransformer(local_model_path)
+        logging.info(f"Loaded local model from: {local_model_path}")
+    else:
+        logging.info(f"Local model not found at {local_model_path}, downloading from HuggingFace Hub...")
+        # 指定缓存目录
+        cache_dir = local_model_path
+        embedding_model = SentenceTransformer('BAAI/bge-base-zh-v1.5', cache_folder=cache_dir)
+        logging.info(f"Model downloaded and cached to: {cache_dir}")
     logging.info(f"The Model 'bge-base-zh-v1.5' Max Input Length: {embedding_model.max_seq_length}")
     logging.info("For the usage details of Embedding Model 'bge-base-zh-v1.5', please refer to 'https://huggingface.co/BAAI/bge-base-zh-v1.5#using-sentence-transformers'")
     return embedding_model
@@ -180,8 +193,14 @@ def generate_process(query, chunks):
     
     # Prepare the request messages, using the prompt as input
     messages = [
-        {"role": "system", "content": "You are a helpful assistant."}, # Add System role to define assistant identity, but it's not mandatory
-        {'role': 'user', 'content': prompt}
+        {
+            "role": "system", 
+            "content": "You are a helpful assistant."
+        }, # Add System role to define assistant identity, but it's not mandatory
+        {
+            'role': 'user', 
+            'content': prompt
+        }
     ]
     logging.info(f"Prompt for generation model: {prompt}")
     # Call the large-model API cloud service to generate a response
@@ -189,7 +208,7 @@ def generate_process(query, chunks):
         # # 版本一：直接一次性获得完整输出（含思考过程）
         # response = Generation.call(
         #     api_key=os.getenv("DASHSCOPE_API_KEY"), # Get your API key from environment variable, if do not have, please set it in your environment
-        #     model="qwen-turbo",                     # Replace with your actual model name
+        #     model="qwen-plus",                     # Replace with your actual model name
         #     messages=messages,                      # The input messages for the model
         #     result_format='message',                # Set the return format to "message"
         #     enable_thinking=True,                   # Enable thinking
@@ -216,7 +235,7 @@ def generate_process(query, chunks):
         # 版本二：流式获取增量输出
         responses = Generation.call(
             api_key=os.getenv("DASHSCOPE_API_KEY"), # Get your API key from environment variable, if do not have, please set it in your environment
-            model="qwen-turbo",                     # Replace with your actual model name
+            model="qwen-plus",                     # Replace with your actual model name
             messages=messages,                      # The input messages for the model
             result_format='message',                # Set the return format to "message"
             stream=True,                            # Enable streaming output
@@ -275,6 +294,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-    
-
-
