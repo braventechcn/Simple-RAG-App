@@ -20,3 +20,6 @@ src/__pycache__/
 
 # Ignore ChromaDB memory files
 .chroma_memory/
+.chroma_memory/*
+chroma_db/
+chroma_db/*

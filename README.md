@@ -42,20 +42,18 @@
     
     其中：
     
-    - **langchain：**用于构建基于大语言模型（LLM）的应用，支持链式调用、工具集成、对话管理等，是 AI 应用开发的主流框架之一。
-    - **langchain_community：**LangChain 社区扩展包，包含更多第三方集成、数据连接器和工具，丰富 LangChain 的生态能力。
-    - **pypdf：**用于读取、解析和操作 PDF 文件，常用于文档处理、内容抽取等场景。
-    - **sentence-transformers：**提供多种预训练的句子/文本向量模型，支持文本语义检索、聚类、相似度计算等 NLP 任务。
-    - **faiss-gpu：**Facebook AI Similarity Search，支持高效的向量检索和聚类，GPU 版本可加速大规模向量计算，常用于语义搜索、推荐系统。
-    - **dashscope：**阿里云达摩院 DashScope 官方 SDK，支持调用 Qwen 等大模型 API，适用于文本生成、对话、推理等 AI 服务。
+    - langchain：用于构建基于大语言模型（LLM）的应用，支持链式调用、工具集成、对话管理等，是 AI 应用开发的主流框架之一。
+    - langchain_community：LangChain 社区扩展包，包含更多第三方集成、数据连接器和工具，丰富 LangChain 的生态能力。
+    - pypdf：用于读取、解析和操作 PDF 文件，常用于文档处理、内容抽取等场景。
+    - sentence-transformers：提供多种预训练的句子/文本向量模型，支持文本语义检索、聚类、相似度计算等 NLP 任务。
+    - faiss-gpu：Facebook AI Similarity Search，支持高效的向量检索和聚类，GPU 版本可加速大规模向量计算，常用于语义搜索、推荐系统。
+    - dashscope：阿里云达摩院 DashScope 官方 SDK，支持调用 Qwen 等大模型 API，适用于文本生成、对话、推理等 AI 服务。
     
     如果无法连接，可以使用国内镜像站点，在命令行中执行以下指令：
     
     ```bash
     # GPU 版本
-    pip install langchain langchain_community pypdf sentence-transformers faiss-gpu 
-    dashscope -i https://pypi.tuna.tsinghua.edu.cn/simple
+    pip install langchain langchain_community pypdf sentence-transformers faiss-gpu dashscope -i https://pypi.tuna.tsinghua.edu.cn/simple
     # CPU 版本
-    pip install langchain langchain_community pypdf sentence-transformers faiss-cpu 
-    dashscope -i https://pypi.tuna.tsinghua.edu.cn/simple
+    pip install langchain langchain_community pypdf sentence-transformers faiss-cpu dashscope -i https://pypi.tuna.tsinghua.edu.cn/simple
     ```
